@@ -13,17 +13,20 @@ const SignUp: React.FC = () => {
     confirmPassword: "",
   });
   const [error, setError] = useState("");
-  const [createUserWithEmailAndPassword, user, loading, eserError] =
+  const [createUserWithEmailAndPassword, user, loading, userError] =
     useCreateUserWithEmailAndPassword(auth);
 
   // Firebase logic
-  const onSubmit = () => {
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (error) setError("");
     if (signUpForm.password !== signUpForm.confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
     //passwords match
     createUserWithEmailAndPassword(signUpForm.email, signUpForm.password);
+    console.log(userError);
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,7 +109,14 @@ const SignUp: React.FC = () => {
           {error}
         </Text>
       )}
-      <Button type="submit" width="100%" height="36px" mt={2} mb={2}>
+      <Button
+        type="submit"
+        width="100%"
+        height="36px"
+        mt={2}
+        mb={2}
+        isLoading={loading}
+      >
         Sign Up
       </Button>
       <Flex fontSize="9pt" justifyContent="center">
